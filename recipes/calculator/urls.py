@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from .views import omlet_view, pasta_view, buter_view, home_view
 
 
