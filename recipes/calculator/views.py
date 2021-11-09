@@ -1,4 +1,4 @@
-from django.shortcuts import render, reverse
+from django.shortcuts import render
 
 DATA = {
     'omlet': {
@@ -20,85 +20,32 @@ DATA = {
 
 def home_view(request):
     template_name = 'calculator/home.html'
-    pages = {
-        'Омлет': reverse('omlet'),
-        'Паста': reverse('pasta'),
-        'Бутерброд': reverse('buter')
-    }
+    recept_list = list(DATA.keys())
+    pages = {k: (k+'/') for k in recept_list}
     context = {
         'pages': pages
     }
     return render(request, template_name, context = context)
 
-def omlet_view(request):
-    omlet = 'omlet'
-    if omlet in DATA:
-        ingridients_omlet = DATA[omlet]
+def recept_view(request, recept):
+    if recept in DATA:
+        ingridients = DATA[recept]
         servings = request.GET.get('servings')
         if servings:
             summa_ingridients = {}
-            for keys_omlet,value_omlet in ingridients_omlet.items():
-                new_value = value_omlet*int(servings)
-                summa_ingridients[keys_omlet] = new_value
+            for keys,value in ingridients.items():
+                new_value = value*int(servings)
+                summa_ingridients[keys] = new_value
                 context = {
-                    'omlet': omlet,
+                    'recept': recept,
                     'recipe': summa_ingridients
                  }
         else:
             context = {
-                'omlet': omlet,
-                'recipe': ingridients_omlet
+                'recept': recept,
+                'recipe': ingridients
             }
 
     else:
         context = None
     return render(request, template_name='calculator/index.html', context=context)
-
-def pasta_view(request):
-    pasta = 'pasta'
-    if pasta in DATA:
-        ingridients_pasta = DATA[pasta]
-        servings = request.GET.get('servings')
-        if servings:
-            summa_ingridients = {}
-            for keys, value in ingridients_pasta.items():
-                new_value = value * int(servings)
-                summa_ingridients[keys] = new_value
-                context = {
-                    'pasta': pasta,
-                    'recipe': summa_ingridients
-                }
-        else:
-            context = {
-                'pasta': pasta,
-                'recipe': ingridients_pasta
-            }
-
-    else:
-        context = None
-    return render(request, template_name='calculator/index.html', context=context)
-
-def buter_view(request):
-    buter = 'buter'
-    if buter in DATA:
-        ingridients_buter = DATA[buter]
-        servings = request.GET.get('servings')
-        if servings:
-            summa_ingridients = {}
-            for keys, value in ingridients_buter.items():
-                new_value = value * int(servings)
-                summa_ingridients[keys] = new_value
-                context = {
-                    'buter': buter,
-                    'recipe': summa_ingridients
-                }
-        else:
-            context = {
-                'buter': buter,
-                'recipe': ingridients_buter
-            }
-
-    else:
-        context = None
-    return render(request, template_name='calculator/index.html', context=context)
-
